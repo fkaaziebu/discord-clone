@@ -15,13 +15,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOrigin } from "@/hooks/use-origin";
+import { MemberRole } from "@prisma/client";
 
 export const InviteModal = () => {
   const { onOpen, isOpen, onClose, type, data } = useModal();
   const origin = useOrigin();
 
   const isModalOpen = isOpen && type === "invite";
-  const { server } = data;
+  const { server, role } = data;
 
   const [copied, setCopied] = useState(false);
   const [isLoading, setisLoading] = useState(false);
@@ -45,7 +46,7 @@ export const InviteModal = () => {
         `/api/servers/${server?.id}/invite-code`
       );
 
-      onOpen("invite", { server: response.data });
+      onOpen("invite", { server: response.data, role });
     } catch (error) {
       console.log(error);
     } finally {
@@ -79,16 +80,18 @@ export const InviteModal = () => {
               )}
             </Button>
           </div>
-          <Button
-            onClick={onNew}
-            disabled={isLoading}
-            variant="link"
-            size="sm"
-            className="text-xs text-zinc-500 mt-4"
-          >
-            Generate a new link
-            <RefreshCw className="w-4 h-4 ml-2" />
-          </Button>
+          {role === MemberRole.ADMIN && (
+            <Button
+              onClick={onNew}
+              disabled={isLoading}
+              variant="link"
+              size="sm"
+              className="text-xs text-zinc-500 mt-4"
+            >
+              Generate a new link
+              <RefreshCw className="w-4 h-4 ml-2" />
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

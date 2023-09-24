@@ -1,4 +1,4 @@
-import { ChannelType, Server } from "@prisma/client";
+import { Channel, ChannelType, MemberRole, Server } from "@prisma/client";
 import { create } from "zustand";
 
 export type ModalType =
@@ -24,6 +24,7 @@ interface ModalData {
   server?: Server;
   channel?: Channel;
   channelType?: ChannelType;
+  role?: MemberRole;
 }
 
 export const useModal = create<ModalStore>((set) => ({
